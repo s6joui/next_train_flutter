@@ -43,42 +43,42 @@ class HomeLayoutWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(slivers: [
       BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-        final isSearchVisible = state is HomeSearch;
         return SliverAppBar.large(
-          title: isSearchVisible ? const SearchWidget() : const TitleWidget(),
+          title: state.searchShown ? const SearchWidget() : TitleWidget(title: state.stationName),
           actions: [
             IconButton(
                 onPressed: () => context.read<HomeBloc>().add(ToggleSearch()),
-                icon: isSearchVisible ? const Icon(Icons.close) : const Icon(Icons.search))
+                icon: state.searchShown ? const Icon(Icons.close) : const Icon(Icons.search))
           ],
         );
       }),
       BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-        if (state is HomeLoaded) {
-          return ArrivalListWidget(data: state.data);
+        if (state.searchShown) {
+          return SearchResults(results: state.searchResults);
         }
-        if (state is HomeError) {
-          return ErrorWidget(icon: state.icon, message: state.message);
+        switch (state.status) {
+          case HomeStatus.loading:
+            return const LoadingWidget();
+          case HomeStatus.success:
+            return ArrivalListWidget(data: state.data);
+          case HomeStatus.error:
+            return ErrorWidget(icon: state.error?.icon, message: state.error?.message);
+          case HomeStatus.initial:
+            return const SliverFillRemaining();
         }
-        if (state is HomeSearch) {
-          return SearchResults(results: state.results);
-        }
-        return const LoadingWidget();
       }),
     ]);
   }
 }
 
 class TitleWidget extends StatelessWidget {
-  const TitleWidget({super.key});
+  final String title;
+
+  const TitleWidget({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String?>(
-      future: context.read<PreferencesLocalRepository>().getStationName(),
-      builder: (context, snapshot) =>
-          Text(snapshot.data ?? '', style: const TextStyle(fontWeight: FontWeight.w800)),
-    );
+    return Text(title, style: const TextStyle(fontWeight: FontWeight.w800));
   }
 }
 
@@ -99,8 +99,8 @@ class SearchWidget extends StatelessWidget {
 }
 
 class ErrorWidget extends StatelessWidget {
-  final IconData icon;
-  final String message;
+  final IconData? icon;
+  final String? message;
 
   const ErrorWidget({
     super.key,
@@ -116,7 +116,7 @@ class ErrorWidget extends StatelessWidget {
         children: [
           Icon(icon, size: 48),
           const SizedBox(height: 16),
-          Text(message),
+          Text(message ?? ''),
           const SizedBox(height: 16),
           ElevatedButton.icon(
               onPressed: () => context.read<HomeBloc>().add(GetLatest()),

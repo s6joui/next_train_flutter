@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:korea_regexp/korea_regexp.dart';
 import 'package:next_train_flutter/features/home/data/local_repository.dart';
 import 'package:next_train_flutter/features/home/data/sation_info_repository.dart';
+import 'package:next_train_flutter/features/home/models/home_error.dart';
 import 'package:next_train_flutter/features/home/models/station_search_result.dart';
 import 'package:next_train_flutter/features/home/models/line_info.dart';
 
@@ -15,9 +16,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final StationInfoRepository stationRepository;
   final LocalRepository localRepository;
 
-  var _isSearchVisible = false;
-
-  HomeBloc(this.stationRepository, this.localRepository) : super(HomeInitial()) {
+  HomeBloc(this.stationRepository, this.localRepository)
+      : super(const HomeState(status: HomeStatus.initial, searchShown: false)) {
     on<GetLatest>(_getLatest);
     on<ToggleSearch>(_toggleSearch);
     on<Search>(_search);
@@ -25,31 +25,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _getLatest(GetLatest event, Emitter<HomeState> emit) async {
-    emit(HomeLoading());
+    emit(state.copyWith(status: HomeStatus.loading));
     final stationName = await localRepository.getStationName();
 
     if (stationName == null) {
-      emit(HomeSearch('', const []));
+      emit(state.copyWith(searchShown: true));
       return;
     }
 
-    _isSearchVisible = false;
-
     try {
       final data = await stationRepository.fetchLatestInfo(stationName);
-      emit(HomeLoaded(data));
+      emit(state.copyWith(status: HomeStatus.success, data: data, stationName: stationName));
     } catch (e) {
-      emit(HomeError(Icons.train, 'Oops! Something went wrong. Please try again.'));
+      const error = HomeError(Icons.train, 'Oops! Something went wrong. Please try again.');
+      emit(state.copyWith(status: HomeStatus.error, error: error));
     }
   }
 
   void _toggleSearch(ToggleSearch event, Emitter<HomeState> emit) {
-    _isSearchVisible = !_isSearchVisible;
-    if (_isSearchVisible) {
-      emit(HomeSearch('', const []));
-    } else {
-      add(GetLatest());
-    }
+    emit(state.copyWith(searchShown: !state.searchShown));
   }
 
   void _search(Search event, Emitter<HomeState> emit) {
@@ -68,14 +62,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           .map((name) => StationSearchResult(name))
           .toList();
 
-      emit(HomeSearch(event.searchQuery, results));
+      emit(state.copyWith(searchShown: true, searchQuery: event.searchQuery, searchResults: results));
     } else {
-      emit(HomeSearch(event.searchQuery, const []));
+      emit(state.copyWith(searchShown: true, searchQuery: '', searchResults: const []));
     }
   }
 
   void _setStation(SetStation event, Emitter<HomeState> emit) {
     localRepository.setStationName(event.name);
+    emit(state.copyWith(stationName: event.name, searchShown: false));
     add(GetLatest());
   }
 }

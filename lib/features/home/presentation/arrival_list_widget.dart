@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:next_train_flutter/features/home/bloc/home_bloc.dart';
 
 import 'package:next_train_flutter/features/home/models/line_info.dart';
 import 'package:next_train_flutter/features/home/presentation/arrival_item_widget.dart';
@@ -24,7 +26,8 @@ class _ArrivalListWidgetState extends State<ArrivalListWidget> {
       (BuildContext context, int index) {
         final lineInfo = widget.data[index];
         return ArrivalItemWidget(
-            line: lineInfo, onStationSelected: (value) => {});
+            line: lineInfo,
+            onStationSelected: (stationName) => context.read<HomeBloc>().add(SetStation(stationName)));
       },
       childCount: widget.data.length,
     ));

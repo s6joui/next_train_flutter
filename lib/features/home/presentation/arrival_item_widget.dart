@@ -5,10 +5,9 @@ import 'package:next_train_flutter/features/home/models/train.dart';
 
 class ArrivalItemWidget extends StatelessWidget {
   final LineInfo line;
-  final ValueSetter<String?> onStationSelected;
+  final ValueSetter<String> onStationSelected;
 
-  const ArrivalItemWidget(
-      {super.key, required this.line, required this.onStationSelected});
+  const ArrivalItemWidget({super.key, required this.line, required this.onStationSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +36,7 @@ class ArrivalItemWidget extends StatelessWidget {
                     children: [
                       Expanded(
                         flex: 1,
-                        child: ArrivalListWidget(
-                            line: line, heading: TrainHeading.left),
+                        child: ArrivalListWidget(line: line, heading: TrainHeading.left),
                       ),
                       const SizedBox(width: 10),
                       Container(
@@ -47,8 +45,7 @@ class ArrivalItemWidget extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         flex: 1,
-                        child: ArrivalListWidget(
-                            line: line, heading: TrainHeading.right),
+                        child: ArrivalListWidget(line: line, heading: TrainHeading.right),
                       )
                     ],
                   ),
@@ -59,7 +56,10 @@ class ArrivalItemWidget extends StatelessWidget {
               top: 22,
               left: 20,
               child: GestureDetector(
-                onTap: () => {onStationSelected(line.leftStationName)},
+                onTap: () => {
+                  if (line.leftStationName != null && line.leftStationName!.isNotEmpty)
+                    {onStationSelected(line.leftStationName!)}
+                },
                 child: Text(line.leftStationName ?? ''),
               ),
             ),
@@ -67,7 +67,10 @@ class ArrivalItemWidget extends StatelessWidget {
               top: 22,
               right: 20,
               child: GestureDetector(
-                onTap: () => {onStationSelected(line.rightStationName)},
+                onTap: () => {
+                  if (line.rightStationName != null && line.rightStationName!.isNotEmpty)
+                    {onStationSelected(line.rightStationName!)}
+                },
                 child: Text(line.rightStationName ?? ''),
               ),
             ),
@@ -76,10 +79,8 @@ class ArrivalItemWidget extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(CupertinoIcons.chevron_left,
-                      size: 16, color: Theme.of(context).hintColor),
-                  Icon(CupertinoIcons.chevron_right,
-                      size: 16, color: Theme.of(context).hintColor),
+                  Icon(CupertinoIcons.chevron_left, size: 16, color: Theme.of(context).hintColor),
+                  Icon(CupertinoIcons.chevron_right, size: 16, color: Theme.of(context).hintColor),
                 ],
               ),
             ),
@@ -87,24 +88,18 @@ class ArrivalItemWidget extends StatelessWidget {
                 visible: line.shouldDisplayRightHeadingTrain,
                 child: AnimatedPositioned(
                     top: 38,
-                    left: line.rightHeadingTrainPosition *
-                        ((MediaQuery.of(context).size.width / 2) - 27),
+                    left:
+                        line.rightHeadingTrainPosition * ((MediaQuery.of(context).size.width / 2) - 27),
                     duration: const Duration(seconds: 120),
-                    child: SizedBox(
-                        width: 44,
-                        height: 26,
-                        child: Image.asset('assets/train_r.png')))),
+                    child: SizedBox(width: 44, height: 26, child: Image.asset('assets/train_r.png')))),
             Visibility(
                 visible: line.shouldDisplayLeftHeadingTrain,
                 child: AnimatedPositioned(
                     top: 38,
-                    right: line.leftHeadingTrainPosition *
-                        ((MediaQuery.of(context).size.width / 2) - 27),
+                    right:
+                        line.leftHeadingTrainPosition * ((MediaQuery.of(context).size.width / 2) - 27),
                     duration: const Duration(seconds: 120),
-                    child: SizedBox(
-                        width: 44,
-                        height: 26,
-                        child: Image.asset('assets/train_l.png')))),
+                    child: SizedBox(width: 44, height: 26, child: Image.asset('assets/train_l.png')))),
           ],
         ));
   }
@@ -116,15 +111,11 @@ class ArrivalListWidget extends StatelessWidget {
   final LineInfo line;
   final TrainHeading heading;
 
-  const ArrivalListWidget({Key? key, required this.line, required this.heading})
-      : super(key: key);
+  const ArrivalListWidget({Key? key, required this.line, required this.heading}) : super(key: key);
 
-  List<Train> get trains => heading == TrainHeading.left
-      ? line.leftHeadingTrains
-      : line.rightHeadingTrains;
-  String? get direction => heading == TrainHeading.left
-      ? line.leftStationName
-      : line.rightStationName;
+  List<Train> get trains =>
+      heading == TrainHeading.left ? line.leftHeadingTrains : line.rightHeadingTrains;
+  String? get direction => heading == TrainHeading.left ? line.leftStationName : line.rightStationName;
 
   @override
   Widget build(BuildContext context) {
@@ -138,10 +129,7 @@ class ArrivalListWidget extends StatelessWidget {
                     overflow: TextOverflow.fade, softWrap: false)),
             Text(train.remainingTimeMessage,
                 style: TextStyle(color: line.color, shadows: const [
-                  Shadow(
-                      color: Colors.grey,
-                      offset: Offset(0.4, 0.2),
-                      blurRadius: 1)
+                  Shadow(color: Colors.grey, offset: Offset(0.4, 0.2), blurRadius: 1)
                 ]))
           ],
         );
@@ -182,8 +170,7 @@ class TrainTrackStopWidget extends StatelessWidget {
   final double borderWidth;
   final Color color;
 
-  const TrainTrackStopWidget(
-      {super.key, this.size = 14, this.borderWidth = 3, required this.color});
+  const TrainTrackStopWidget({super.key, this.size = 14, this.borderWidth = 3, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -204,10 +191,7 @@ class StationNameWidget extends StatelessWidget {
   final Color color;
 
   const StationNameWidget(
-      {super.key,
-      required this.lineName,
-      required this.stationName,
-      required this.color});
+      {super.key, required this.lineName, required this.stationName, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -219,10 +203,7 @@ class StationNameWidget extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(shape: BoxShape.circle, color: color),
           child: Text('${lineName?.substring(0, 1)}',
-              style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
         ),
         const SizedBox(width: 4),
         Text('$stationName', style: const TextStyle(fontSize: 16))
