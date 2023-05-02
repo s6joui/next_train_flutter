@@ -44,7 +44,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _toggleSearch(ToggledSearch event, Emitter<HomeState> emit) {
-    emit(state.copyWith(searchShown: !state.searchShown));
+    emit(state.copyWith(searchShown: !state.searchShown, searchQuery: '', searchResults: const []));
   }
 
   void _search(Searched event, Emitter<HomeState> emit) {
@@ -71,7 +71,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void _setStation(ChangedStation event, Emitter<HomeState> emit) {
     localRepository.setStationName(event.name);
-    emit(state.copyWith(stationName: event.name, searchShown: false));
+    emit(state.copyWith(
+        stationName: event.name, searchShown: false, searchQuery: '', searchResults: const []));
     add(RequestedLatestData());
   }
 }

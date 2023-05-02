@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:next_train_flutter/features/home/bloc/home_bloc.dart';
@@ -44,13 +45,16 @@ class HomeLayoutWidget extends StatelessWidget {
     return CustomScrollView(slivers: [
       BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
         return SliverAppBar.large(
-          title: state.searchShown ? const SearchWidget() : TitleWidget(title: state.stationName),
-          actions: [
-            IconButton(
-                onPressed: () => context.read<HomeBloc>().add(ToggledSearch()),
-                icon: state.searchShown ? const Icon(Icons.close) : const Icon(Icons.search))
-          ],
-        );
+            centerTitle: true,
+            title: !state.searchShown ? TitleWidget(title: state.stationName) : Container(),
+            actions: [
+              IconButton(
+                  onPressed: () => context.read<HomeBloc>().add(ToggledSearch()),
+                  icon: state.searchShown ? const Icon(Icons.close) : const Icon(Icons.search))
+            ],
+            flexibleSpace: state.searchShown
+                ? const FlexibleSpaceBar(titlePadding: EdgeInsets.all(16), title: SearchWidget())
+                : null);
       }),
       BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
         if (state.searchShown) {

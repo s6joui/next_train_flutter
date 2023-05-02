@@ -84,7 +84,8 @@ class ArrivalItemWidget extends StatelessWidget {
                 ],
               ),
             ),
-            Visibility(
+            // Disabling animations for now
+            /*Visibility(
                 visible: line.shouldDisplayRightHeadingTrain,
                 child: AnimatedPositioned(
                     top: 38,
@@ -99,7 +100,7 @@ class ArrivalItemWidget extends StatelessWidget {
                     right:
                         line.leftHeadingTrainPosition * ((MediaQuery.of(context).size.width / 2) - 27),
                     duration: const Duration(seconds: 120),
-                    child: SizedBox(width: 44, height: 26, child: Image.asset('assets/train_l.png')))),
+                    child: SizedBox(width: 44, height: 26, child: Image.asset('assets/train_l.png')))),*/
           ],
         ));
   }

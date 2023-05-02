@@ -20,7 +20,7 @@ class SliverSeparatedListView extends StatelessWidget {
             if (index.isEven) {
               return itemBuilder(context, itemIndex);
             }
-            return const Divider();
+            return Divider(color: Theme.of(context).highlightColor, thickness: 0.5);
           },
           semanticIndexCallback: (Widget widget, int localIndex) {
             if (localIndex.isEven) {
