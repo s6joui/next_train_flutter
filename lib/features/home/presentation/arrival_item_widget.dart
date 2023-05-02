@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:next_train_flutter/models/line_info.dart';
-import 'package:next_train_flutter/models/train.dart';
+import 'package:next_train_flutter/features/home/models/line_info.dart';
+import 'package:next_train_flutter/features/home/models/train.dart';
 
 class ArrivalItemWidget extends StatelessWidget {
   final LineInfo line;

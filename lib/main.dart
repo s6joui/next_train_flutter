@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:next_train_flutter/presentation/home_page.dart';
+import 'package:next_train_flutter/features/home/presentation/home_page.dart';
 
 void main() {
   runApp(const MyApp());

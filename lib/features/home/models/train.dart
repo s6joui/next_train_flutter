@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:next_train_flutter/data/arrival_info.dart';
+import 'package:next_train_flutter/features/home/data/arrival_info.dart';
 
 class Train {
   String? id;

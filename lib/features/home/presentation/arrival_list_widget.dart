@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-import 'package:next_train_flutter/models/line_info.dart';
-import 'package:next_train_flutter/presentation/arrival_item_widget.dart';
+import 'package:next_train_flutter/features/home/models/line_info.dart';
+import 'package:next_train_flutter/features/home/presentation/arrival_item_widget.dart';
 
 class ArrivalListWidget extends StatefulWidget {
   final List<LineInfo> data;

@@ -1,6 +1,6 @@
 import 'package:next_train_flutter/api_key.dart';
-import 'package:next_train_flutter/common/network/network_client.dart';
-import 'package:next_train_flutter/data/arrival_info.dart';
+import 'package:next_train_flutter/network/network_client.dart';
+import 'package:next_train_flutter/features/home/data/arrival_info.dart';
 
 abstract class SubwayApiRequest extends NetworkRequest {
   final String baseUrl =

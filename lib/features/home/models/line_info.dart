@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:next_train_flutter/models/train.dart';
+import 'package:next_train_flutter/features/home/models/train.dart';
 
 class LineInfo {
   String id;

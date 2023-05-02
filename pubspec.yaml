@@ -41,6 +41,8 @@ dependencies:
   csv: ^5.0.2
   http: ^0.13.5
   shimmer: ^2.0.0
+  shared_preferences: ^2.1.0
+  korea_regexp: ^1.0.1
 
 dev_dependencies:
   flutter_test:

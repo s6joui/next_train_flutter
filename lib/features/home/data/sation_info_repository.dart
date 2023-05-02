@@ -1,12 +1,13 @@
-import 'package:next_train_flutter/common/csv_reader.dart';
-import 'package:next_train_flutter/common/network/network_client.dart';
-import 'package:next_train_flutter/data/arrival_info.dart';
-import 'package:next_train_flutter/data/subway_api.dart';
-import 'package:next_train_flutter/models/line_info.dart';
-import 'package:next_train_flutter/models/train.dart';
+import 'package:next_train_flutter/utils/csv_reader.dart';
+import 'package:next_train_flutter/network/network_client.dart';
+import 'package:next_train_flutter/features/home/data/arrival_info.dart';
+import 'package:next_train_flutter/features/home/data/subway_api.dart';
+import 'package:next_train_flutter/features/home/models/line_info.dart';
+import 'package:next_train_flutter/features/home/models/train.dart';
 import 'package:next_train_flutter/utils/line_colors.dart';
 
 abstract class StationInfoRepository {
+  Set<String> getStationNames();
   Future<List<LineInfo>> fetchLatestInfo(String stationName);
 }
 
@@ -16,10 +17,15 @@ class SubwayStationInfoResposiory extends StationInfoRepository {
 
   final Map<int, String> _stations = {};
   final Map<String, String> _lines = {};
-  final Set<String> stationNames = {};
+  final Set<String> _stationNames = {};
 
   SubwayStationInfoResposiory(this.networkClient) {
     _readCsvStationData();
+  }
+
+  @override
+  Set<String> getStationNames() {
+    return _stationNames;
   }
 
   @override
@@ -62,7 +68,7 @@ class SubwayStationInfoResposiory extends StationInfoRepository {
         final lineInfo = LineInfo(
             id: lineId!,
             name: _lines[lineId],
-            stationId: stationId!,
+            stationId: stationId,
             stationName: _stations[stationId],
             leftStationName: _stations[previousStationId],
             rightStationName: _stations[nextStationId],
@@ -86,7 +92,7 @@ class SubwayStationInfoResposiory extends StationInfoRepository {
       final stationName = stationInfo[2];
       final lineId = stationInfo[0];
       final lineName = stationInfo[3];
-      stationNames.add(stationName);
+      _stationNames.add(stationName);
       _stations[stationId] = stationName;
       _lines['$lineId'] = lineName;
     }
