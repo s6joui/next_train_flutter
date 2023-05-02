@@ -27,7 +27,8 @@ class _ArrivalListWidgetState extends State<ArrivalListWidget> {
         final lineInfo = widget.data[index];
         return ArrivalItemWidget(
             line: lineInfo,
-            onStationSelected: (stationName) => context.read<HomeBloc>().add(SetStation(stationName)));
+            onStationSelected: (stationName) =>
+                context.read<HomeBloc>().add(ChangedStation(stationName)));
       },
       childCount: widget.data.length,
     ));

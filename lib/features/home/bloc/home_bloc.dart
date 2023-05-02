@@ -18,13 +18,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   HomeBloc(this.stationRepository, this.localRepository)
       : super(const HomeState(status: HomeStatus.initial, searchShown: false)) {
-    on<GetLatest>(_getLatest);
-    on<ToggleSearch>(_toggleSearch);
-    on<Search>(_search);
-    on<SetStation>(_setStation);
+    on<RequestedLatestData>(_getLatest);
+    on<ToggledSearch>(_toggleSearch);
+    on<Searched>(_search);
+    on<ChangedStation>(_setStation);
   }
 
-  void _getLatest(GetLatest event, Emitter<HomeState> emit) async {
+  void _getLatest(RequestedLatestData event, Emitter<HomeState> emit) async {
     emit(state.copyWith(status: HomeStatus.loading));
     final stationName = await localRepository.getStationName();
 
@@ -42,11 +42,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  void _toggleSearch(ToggleSearch event, Emitter<HomeState> emit) {
+  void _toggleSearch(ToggledSearch event, Emitter<HomeState> emit) {
     emit(state.copyWith(searchShown: !state.searchShown));
   }
 
-  void _search(Search event, Emitter<HomeState> emit) {
+  void _search(Searched event, Emitter<HomeState> emit) {
     if (event.searchQuery.isNotEmpty) {
       final regex = getRegExp(
           event.searchQuery,
@@ -68,9 +68,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  void _setStation(SetStation event, Emitter<HomeState> emit) {
+  void _setStation(ChangedStation event, Emitter<HomeState> emit) {
     localRepository.setStationName(event.name);
     emit(state.copyWith(stationName: event.name, searchShown: false));
-    add(GetLatest());
+    add(RequestedLatestData());
   }
 }

@@ -3,29 +3,29 @@ part of 'home_bloc.dart';
 @immutable
 abstract class HomeEvent extends Equatable {}
 
-class GetLatest extends HomeEvent {
+class RequestedLatestData extends HomeEvent {
   @override
   List<Object?> get props => [];
 }
 
-class ToggleSearch extends HomeEvent {
+class ToggledSearch extends HomeEvent {
   @override
   List<Object?> get props => [];
 }
 
-class Search extends HomeEvent {
+class Searched extends HomeEvent {
   final String searchQuery;
 
-  Search(this.searchQuery);
+  Searched(this.searchQuery);
 
   @override
   List<Object?> get props => [searchQuery];
 }
 
-class SetStation extends HomeEvent {
+class ChangedStation extends HomeEvent {
   final String name;
 
-  SetStation(this.name);
+  ChangedStation(this.name);
 
   @override
   List<Object?> get props => [name];

@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
             child: BlocProvider<HomeBloc>(
                 create: (context) => HomeBloc(context.read<SubwayStationInfoResposiory>(),
                     context.read<PreferencesLocalRepository>())
-                  ..add(GetLatest()),
+                  ..add(RequestedLatestData()),
                 child: const HomeLayoutWidget())));
   }
 }
@@ -47,7 +47,7 @@ class HomeLayoutWidget extends StatelessWidget {
           title: state.searchShown ? const SearchWidget() : TitleWidget(title: state.stationName),
           actions: [
             IconButton(
-                onPressed: () => context.read<HomeBloc>().add(ToggleSearch()),
+                onPressed: () => context.read<HomeBloc>().add(ToggledSearch()),
                 icon: state.searchShown ? const Icon(Icons.close) : const Icon(Icons.search))
           ],
         );
@@ -91,7 +91,7 @@ class SearchWidget extends StatelessWidget {
       autofocus: true,
       textInputAction: TextInputAction.search,
       onChanged: (value) {
-        context.read<HomeBloc>().add(Search(value));
+        context.read<HomeBloc>().add(Searched(value));
       },
       decoration: const InputDecoration(hintText: '지하철역명', border: InputBorder.none),
     );
@@ -119,7 +119,7 @@ class ErrorWidget extends StatelessWidget {
           Text(message ?? ''),
           const SizedBox(height: 16),
           ElevatedButton.icon(
-              onPressed: () => context.read<HomeBloc>().add(GetLatest()),
+              onPressed: () => context.read<HomeBloc>().add(RequestedLatestData()),
               icon: const Icon(Icons.refresh),
               label: const Text('Retry')),
         ],
@@ -154,7 +154,7 @@ class SearchResults extends StatelessWidget {
           return ListTile(
             leading: Icon(Icons.train, color: Theme.of(context).disabledColor),
             title: Text(stationName),
-            onTap: () => context.read<HomeBloc>().add(SetStation(stationName)),
+            onTap: () => context.read<HomeBloc>().add(ChangedStation(stationName)),
           );
         });
   }
