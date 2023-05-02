@@ -1,7 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
+import 'package:next_train_flutter/models/line_info.dart';
+import 'package:next_train_flutter/presentation/arrival_item_widget.dart';
+
 class ArrivalListWidget extends StatefulWidget {
-  const ArrivalListWidget({super.key});
+  final List<LineInfo> data;
+
+  const ArrivalListWidget({
+    Key? key,
+    required this.data,
+  }) : super(key: key);
 
   @override
   State<ArrivalListWidget> createState() => _ArrivalListWidgetState();
@@ -13,9 +22,11 @@ class _ArrivalListWidgetState extends State<ArrivalListWidget> {
     return SliverList(
         delegate: SliverChildBuilderDelegate(
       (BuildContext context, int index) {
-        return const Placeholder();
+        final lineInfo = widget.data[index];
+        return ArrivalItemWidget(
+            line: lineInfo, onStationSelected: (value) => {});
       },
-      childCount: 5,
+      childCount: widget.data.length,
     ));
   }
 }

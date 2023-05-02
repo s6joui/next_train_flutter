@@ -18,7 +18,7 @@ abstract class NetworkRequest {
 class NetworkClient {
   final http.Client httpClient;
 
-  NetworkClient({required this.httpClient});
+  const NetworkClient({required this.httpClient});
 
   Future<Json> send(NetworkRequest request) async {
     print("Calling ${request.url}");

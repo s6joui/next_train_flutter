@@ -18,7 +18,10 @@ void main() {
       'emits [ArrivalsLoading, ArrivalsLoaded] when successfully loading arrivals.',
       build: () => arrivalsBloc,
       act: (bloc) => bloc.add(GetLatest('홍대입구')),
-      expect: () => [ArrivalsLoading(), ArrivalsLoaded()],
+      expect: () => [
+        ArrivalsLoading(),
+        ArrivalsLoaded(MockArrivalsRepository.mockStationInfo['홍대입구']!)
+      ],
     );
 
     blocTest<ArrivalsBloc, ArrivalsState>(

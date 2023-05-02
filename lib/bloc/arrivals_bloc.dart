@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:next_train_flutter/data/sation_info_repository.dart';
+import 'package:next_train_flutter/models/line_info.dart';
 
 part 'arrivals_event.dart';
 part 'arrivals_state.dart';
@@ -19,10 +20,10 @@ class ArrivalsBloc extends Bloc<ArrivalsEvent, ArrivalsState> {
         emit(ArrivalsLoading());
         try {
           final info = await repository.fetchLatestInfo(event.stationName);
-          emit(ArrivalsLoaded());
+          emit(ArrivalsLoaded(info));
         } catch (e) {
           emit(ArrivalsError(
-              Icons.error, 'Oops! Something went wrong. Please try again.'));
+              Icons.train, 'Oops! Something went wrong. Please try again.'));
         }
       }
     });

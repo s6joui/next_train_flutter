@@ -14,13 +14,17 @@ class ArrivalsLoading extends ArrivalsState {
 }
 
 class ArrivalsLoaded extends ArrivalsState {
+  final List<LineInfo> data;
+
+  ArrivalsLoaded(this.data);
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [data];
 }
 
 class ArrivalsError extends ArrivalsState {
   final IconData icon;
-  final String? message;
+  final String message;
 
   ArrivalsError(this.icon, this.message);
 
