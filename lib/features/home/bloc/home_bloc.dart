@@ -25,8 +25,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _getLatest(RequestedLatestData event, Emitter<HomeState> emit) async {
-    emit(state.copyWith(status: HomeStatus.loading));
     final stationName = await localRepository.getStationName();
+
+    emit(state.copyWith(status: HomeStatus.loading, stationName: stationName));
 
     if (stationName == null) {
       emit(state.copyWith(searchShown: true));

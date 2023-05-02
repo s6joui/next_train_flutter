@@ -25,7 +25,7 @@ void main() {
       },
       act: (bloc) => bloc.add(RequestedLatestData()),
       expect: () => [
-        const HomeState(status: HomeStatus.loading),
+        const HomeState(status: HomeStatus.loading, stationName: '홍대입구'),
         const HomeState(status: HomeStatus.success, data: [], stationName: '홍대입구')
       ],
     );
@@ -67,7 +67,10 @@ void main() {
 
     blocTest<HomeBloc, HomeState>(
       'emits state to hide search, loading and success when selecting a station from search results',
-      build: () => homeBloc,
+      build: () {
+        localRepository.stationName = '대림';
+        return homeBloc;
+      },
       act: (bloc) => bloc.add(ChangedStation('대림')),
       expect: () => [
         const HomeState(status: HomeStatus.initial, searchShown: false, stationName: '대림'),
