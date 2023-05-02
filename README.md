@@ -1,16 +1,14 @@
 # next_train_flutter
 
-A new Flutter project.
+Flutter app that shows real-time information about subway train arrivals in Seoul, South Korea.
+The app was implemented using BLoC pattern.
 
 ## Getting Started
+* Rename `api_key.example.dart` to `api_key.dart` and paste your API key.
+    * If you don't provide an API key the app will still work within the api limits. For full access you must ask for an API key here: https://data.seoul.go.kr/
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Screenshots
+<p>
+  <img src="https://i.imgur.com/wpw44QL.png" width="350" title="Screenshot 1">
+  <img src="https://i.imgur.com/15nkOlc.png" width="350" title="Screenshot 2">
+</p>
