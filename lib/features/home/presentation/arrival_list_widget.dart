@@ -21,16 +21,19 @@ class ArrivalListWidget extends StatefulWidget {
 class _ArrivalListWidgetState extends State<ArrivalListWidget> {
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-        delegate: SliverChildBuilderDelegate(
-      (BuildContext context, int index) {
-        final lineInfo = widget.data[index];
-        return ArrivalItemWidget(
-            line: lineInfo,
-            onStationSelected: (stationName) =>
-                context.read<HomeBloc>().add(ChangedStation(stationName)));
-      },
-      childCount: widget.data.length,
-    ));
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 12, bottom: 96),
+      sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final lineInfo = widget.data[index];
+          return ArrivalItemWidget(
+              line: lineInfo,
+              onStationSelected: (stationName) =>
+                  context.read<HomeBloc>().add(ChangedStation(stationName)));
+        },
+        childCount: widget.data.length,
+      )),
+    );
   }
 }

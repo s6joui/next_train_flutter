@@ -31,6 +31,16 @@ void main() {
     );
 
     blocTest<HomeBloc, HomeState>(
+      'emits success when successfully loading from backround (no user interaction).',
+      build: () {
+        localRepository.stationName = '홍대입구';
+        return homeBloc;
+      },
+      act: (bloc) => bloc.add(RequestedLatestData(backgroundRefresh: true)),
+      expect: () => [const HomeState(status: HomeStatus.success, data: [], stationName: '홍대입구')],
+    );
+
+    blocTest<HomeBloc, HomeState>(
       'emits loading status and error when failing to load Home.',
       build: () {
         stationRepository.shouldError = true;
@@ -46,16 +56,13 @@ void main() {
     );
 
     blocTest<HomeBloc, HomeState>(
-      'emits loading and loading with searchShown when no station saved. (first run)',
+      'emits initial with searchShown when no station saved. (first run)',
       build: () {
         localRepository.stationName = null;
         return homeBloc;
       },
       act: (bloc) => bloc.add(RequestedLatestData()),
-      expect: () => [
-        const HomeState(status: HomeStatus.loading),
-        const HomeState(status: HomeStatus.loading, searchShown: true)
-      ],
+      expect: () => [const HomeState(status: HomeStatus.initial, searchShown: true)],
     );
 
     blocTest<HomeBloc, HomeState>(

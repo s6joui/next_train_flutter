@@ -26,20 +26,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<ToggledSearch>(_toggleSearch);
     on<Searched>(_search);
     on<ChangedStation>(_setStation);
-
-    // Setup periodic refresh
-    _tickerSubscription =
-        stationRepository.tick().listen((e) => add(RequestedLatestData(backgroundRefresh: true)));
   }
 
   void _getLatest(RequestedLatestData event, Emitter<HomeState> emit) async {
+    _resetTicker(); // Setup periodic refresh
     final stationName = await localRepository.getStationName();
-
-    emit(state.copyWith(status: HomeStatus.loading, stationName: stationName));
 
     if (stationName == null) {
       emit(state.copyWith(searchShown: true));
       return;
+    }
+
+    if (!event.backgroundRefresh) {
+      emit(state.copyWith(status: HomeStatus.loading, stationName: stationName));
     }
 
     try {
@@ -82,6 +81,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(state.copyWith(
         stationName: event.name, searchShown: false, searchQuery: '', searchResults: const []));
     add(RequestedLatestData());
+  }
+
+  void _resetTicker() {
+    _tickerSubscription?.cancel();
+    _tickerSubscription =
+        stationRepository.tick().listen((e) => add(RequestedLatestData(backgroundRefresh: true)));
   }
 
   @override

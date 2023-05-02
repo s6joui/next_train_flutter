@@ -11,98 +11,100 @@ class ArrivalItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        elevation: 2,
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          children: [
-            Container(
-              color: Theme.of(context).cardColor,
-              child: Column(children: [
-                const SizedBox(height: 12),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  StationNameWidget(
-                      lineName: line.sanitizedName,
-                      stationName: line.stationName,
-                      color: line.color ?? Colors.white)
-                ]),
-                const SizedBox(height: 8),
-                TrainTrackWidget(color: line.color ?? Colors.white),
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: ArrivalListWidget(line: line, heading: TrainHeading.left),
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                          color: Theme.of(context).highlightColor,
-                          child: const SizedBox(width: 1, height: 50)),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        flex: 1,
-                        child: ArrivalListWidget(line: line, heading: TrainHeading.right),
-                      )
-                    ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Container(
+          decoration:
+              BoxDecoration(borderRadius: BorderRadius.circular(12), color: Theme.of(context).cardColor),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            children: [
+              Container(
+                color: Theme.of(context).cardColor,
+                child: Column(children: [
+                  const SizedBox(height: 12),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    StationNameWidget(
+                        lineName: line.sanitizedName,
+                        stationName: line.stationName,
+                        color: line.color ?? Colors.white)
+                  ]),
+                  const SizedBox(height: 8),
+                  TrainTrackWidget(color: line.color ?? Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: ArrivalListWidget(line: line, heading: TrainHeading.left),
+                        ),
+                        const SizedBox(width: 10),
+                        Container(
+                            color: Theme.of(context).highlightColor,
+                            child: const SizedBox(width: 1, height: 50)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          flex: 1,
+                          child: ArrivalListWidget(line: line, heading: TrainHeading.right),
+                        )
+                      ],
+                    ),
                   ),
+                ]),
+              ),
+              Positioned(
+                top: 22,
+                left: 20,
+                child: GestureDetector(
+                  onTap: () => {
+                    if (line.leftStationName != null && line.leftStationName!.isNotEmpty)
+                      {onStationSelected(line.leftStationName!)}
+                  },
+                  child: Text(line.leftStationName ?? ''),
                 ),
-              ]),
-            ),
-            Positioned(
-              top: 22,
-              left: 20,
-              child: GestureDetector(
-                onTap: () => {
-                  if (line.leftStationName != null && line.leftStationName!.isNotEmpty)
-                    {onStationSelected(line.leftStationName!)}
-                },
-                child: Text(line.leftStationName ?? ''),
               ),
-            ),
-            Positioned(
-              top: 22,
-              right: 20,
-              child: GestureDetector(
-                onTap: () => {
-                  if (line.rightStationName != null && line.rightStationName!.isNotEmpty)
-                    {onStationSelected(line.rightStationName!)}
-                },
-                child: Text(line.rightStationName ?? ''),
+              Positioned(
+                top: 22,
+                right: 20,
+                child: GestureDetector(
+                  onTap: () => {
+                    if (line.rightStationName != null && line.rightStationName!.isNotEmpty)
+                      {onStationSelected(line.rightStationName!)}
+                  },
+                  child: Text(line.rightStationName ?? ''),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 3),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(CupertinoIcons.chevron_left, size: 16, color: Theme.of(context).hintColor),
-                  Icon(CupertinoIcons.chevron_right, size: 16, color: Theme.of(context).hintColor),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(CupertinoIcons.chevron_left, size: 16, color: Theme.of(context).hintColor),
+                    Icon(CupertinoIcons.chevron_right, size: 16, color: Theme.of(context).hintColor),
+                  ],
+                ),
               ),
-            ),
-            // Disabling animations for now
-            /*Visibility(
-                visible: line.shouldDisplayRightHeadingTrain,
-                child: AnimatedPositioned(
-                    top: 38,
-                    left:
-                        line.rightHeadingTrainPosition * ((MediaQuery.of(context).size.width / 2) - 27),
-                    duration: const Duration(seconds: 120),
-                    child: SizedBox(width: 44, height: 26, child: Image.asset('assets/train_r.png')))),
-            Visibility(
-                visible: line.shouldDisplayLeftHeadingTrain,
-                child: AnimatedPositioned(
-                    top: 38,
-                    right:
-                        line.leftHeadingTrainPosition * ((MediaQuery.of(context).size.width / 2) - 27),
-                    duration: const Duration(seconds: 120),
-                    child: SizedBox(width: 44, height: 26, child: Image.asset('assets/train_l.png')))),*/
-          ],
-        ));
+              // Disabling animations for now
+              /*Visibility(
+                  visible: line.shouldDisplayRightHeadingTrain,
+                  child: AnimatedPositioned(
+                      top: 38,
+                      left:
+                          line.rightHeadingTrainPosition * ((MediaQuery.of(context).size.width / 2) - 27),
+                      duration: const Duration(seconds: 120),
+                      child: SizedBox(width: 44, height: 26, child: Image.asset('assets/train_r.png')))),
+              Visibility(
+                  visible: line.shouldDisplayLeftHeadingTrain,
+                  child: AnimatedPositioned(
+                      top: 38,
+                      right:
+                          line.leftHeadingTrainPosition * ((MediaQuery.of(context).size.width / 2) - 27),
+                      duration: const Duration(seconds: 120),
+                      child: SizedBox(width: 44, height: 26, child: Image.asset('assets/train_l.png')))),*/
+            ],
+          )),
+    );
   }
 }
 

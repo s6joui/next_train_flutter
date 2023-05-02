@@ -9,6 +9,7 @@ import 'package:next_train_flutter/features/home/data/sation_info_repository.dar
 import 'package:next_train_flutter/features/home/presentation/arrival_list_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:next_train_flutter/widgets/sliver_separated_list_view.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -139,9 +140,43 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
+    return SliverPadding(
+      padding: const EdgeInsets.only(top: 12, bottom: 12),
+      sliver: SliverFixedExtentList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            return Shimmer.fromColors(
+                baseColor: Theme.of(context).cardColor,
+                highlightColor: Theme.of(context).colorScheme.background,
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Container(
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+                    )));
+          }, childCount: 4),
+          itemExtent: 174),
+    );
   }
 }
+
+/*
+
+Shimmer.fromColors(
+            baseColor: Theme.of(context).cardColor,
+            highlightColor: Theme.of(context).colorScheme.background.withAlpha(50),
+            child: Container(
+              height: 158,
+              color: Colors.white,
+            ))
+
+Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Container(
+                    height: 158,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+                  ))
+*/
 
 class SearchResults extends StatelessWidget {
   final List<StationSearchResult> results;
