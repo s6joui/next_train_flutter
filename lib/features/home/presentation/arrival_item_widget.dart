@@ -14,8 +14,18 @@ class ArrivalItemWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Container(
-          decoration:
-              BoxDecoration(borderRadius: BorderRadius.circular(12), color: Theme.of(context).cardColor),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: Theme.of(context).cardColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 2), // changes position of shadow
+              )
+            ],
+          ),
           clipBehavior: Clip.antiAlias,
           child: Stack(
             children: [

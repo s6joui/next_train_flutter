@@ -145,8 +145,9 @@ class LoadingWidget extends StatelessWidget {
       sliver: SliverFixedExtentList(
           delegate: SliverChildBuilderDelegate((context, index) {
             return Shimmer.fromColors(
+                period: const Duration(milliseconds: 800),
                 baseColor: Theme.of(context).cardColor,
-                highlightColor: Theme.of(context).colorScheme.background,
+                highlightColor: Theme.of(context).colorScheme.background.withAlpha(150),
                 child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Container(
