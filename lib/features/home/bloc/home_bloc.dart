@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,12 +18,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final StationInfoRepository stationRepository;
   final LocalRepository localRepository;
 
+  StreamSubscription<void>? _tickerSubscription;
+
   HomeBloc(this.stationRepository, this.localRepository)
       : super(const HomeState(status: HomeStatus.initial, searchShown: false)) {
     on<RequestedLatestData>(_getLatest);
     on<ToggledSearch>(_toggleSearch);
     on<Searched>(_search);
     on<ChangedStation>(_setStation);
+
+    // Setup periodic refresh
+    _tickerSubscription =
+        stationRepository.tick().listen((e) => add(RequestedLatestData(backgroundRefresh: true)));
   }
 
   void _getLatest(RequestedLatestData event, Emitter<HomeState> emit) async {
@@ -35,7 +43,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     try {
-      final data = await stationRepository.fetchLatestInfo(stationName);
+      final data = await stationRepository.fetchInfo(stationName, shouldDelay: !event.backgroundRefresh);
       emit(state.copyWith(status: HomeStatus.success, data: data, stationName: stationName));
     } catch (e) {
       const error = HomeError(Icons.train, 'Oops! Something went wrong. Please try again.');
@@ -74,5 +82,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(state.copyWith(
         stationName: event.name, searchShown: false, searchQuery: '', searchResults: const []));
     add(RequestedLatestData());
+  }
+
+  @override
+  Future<void> close() {
+    _tickerSubscription?.cancel();
+    return super.close();
   }
 }

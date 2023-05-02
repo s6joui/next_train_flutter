@@ -6,7 +6,7 @@ class MockStationInfoRepository extends StationInfoRepository {
   bool shouldError = false;
 
   @override
-  Future<List<LineInfo>> fetchLatestInfo(String stationName) async {
+  Future<List<LineInfo>> fetchInfo(String stationName, {required bool shouldDelay}) async {
     if (shouldError) {
       return Future.error('error');
     }
@@ -16,6 +16,11 @@ class MockStationInfoRepository extends StationInfoRepository {
   @override
   Set<String> getStationNames() {
     return {};
+  }
+
+  @override
+  Stream<void> tick() {
+    return const Stream.empty();
   }
 }
 

@@ -8,10 +8,13 @@ import 'package:next_train_flutter/utils/line_colors.dart';
 
 abstract class StationInfoRepository {
   Set<String> getStationNames();
-  Future<List<LineInfo>> fetchLatestInfo(String stationName);
+  Future<List<LineInfo>> fetchInfo(String stationName, {required bool shouldDelay});
+  Stream<void> tick();
 }
 
 class SubwayStationInfoResposiory extends StationInfoRepository {
+  static const Duration refreshInterval = Duration(seconds: 30);
+
   final NetworkClient networkClient;
   final CsvReader csvReader = CsvReader();
 
@@ -29,9 +32,11 @@ class SubwayStationInfoResposiory extends StationInfoRepository {
   }
 
   @override
-  Future<List<LineInfo>> fetchLatestInfo(String stationName) async {
-    await Future.delayed(
-        const Duration(seconds: 2)); // Short delay to avoid calling the API too frequently
+  Future<List<LineInfo>> fetchInfo(String stationName, {bool shouldDelay = false}) async {
+    if (shouldDelay) {
+      // Short delay to avoid calling the API too frequently
+      await Future.delayed(const Duration(seconds: 2));
+    }
     final ArrivalsRequest request = ArrivalsRequest(stationName: stationName);
     try {
       final json = await networkClient.send(request);
@@ -49,6 +54,11 @@ class SubwayStationInfoResposiory extends StationInfoRepository {
       print(e.toString());
       return Future.error(e);
     }
+  }
+
+  @override
+  Stream<void> tick() {
+    return Stream.periodic(refreshInterval);
   }
 
   List<LineInfo>? _groupArrivalInfoByLine(ArrivalsResponse infoResponse) {

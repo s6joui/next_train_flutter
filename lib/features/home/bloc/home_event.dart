@@ -4,6 +4,10 @@ part of 'home_bloc.dart';
 abstract class HomeEvent extends Equatable {}
 
 class RequestedLatestData extends HomeEvent {
+  final bool backgroundRefresh;
+
+  RequestedLatestData({this.backgroundRefresh = false});
+
   @override
   List<Object?> get props => [];
 }
