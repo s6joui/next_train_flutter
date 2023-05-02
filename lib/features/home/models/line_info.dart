@@ -1,17 +1,21 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:ui';
+
+import 'package:equatable/equatable.dart';
+
 import 'package:next_train_flutter/features/home/models/train.dart';
 
-class LineInfo {
-  String id;
-  String? name;
-  int stationId;
-  String? stationName;
-  String? leftStationName;
-  String? rightStationName;
-  Color? color;
-  List<Train> trains;
+class LineInfo extends Equatable {
+  final String id;
+  final String? name;
+  final int stationId;
+  final String? stationName;
+  final String? leftStationName;
+  final String? rightStationName;
+  final Color? color;
+  final List<Train> trains;
 
-  LineInfo({
+  const LineInfo({
     required this.id,
     required this.name,
     required this.stationId,
@@ -43,8 +47,7 @@ class LineInfo {
       return false;
     }
     final train = rightHeadingTrains.first;
-    if (train.currentLocation == stationName ||
-        train.currentLocation == leftStationName) {
+    if (train.currentLocation == stationName || train.currentLocation == leftStationName) {
       return true;
     }
     return false;
@@ -55,8 +58,7 @@ class LineInfo {
       return 0;
     }
     final train = rightHeadingTrains.first;
-    if (train.currentLocation == stationName ||
-        (train.remainingSeconds ?? 0) < 160) {
+    if (train.currentLocation == stationName || (train.remainingSeconds ?? 0) < 160) {
       return 1;
     } else if (train.currentLocation == leftStationName) {
       return 0.07;
@@ -69,8 +71,7 @@ class LineInfo {
       return false;
     }
     final train = leftHeadingTrains.first;
-    if (train.currentLocation == stationName ||
-        train.currentLocation == rightStationName) {
+    if (train.currentLocation == stationName || train.currentLocation == rightStationName) {
       return true;
     }
     return false;
@@ -81,12 +82,25 @@ class LineInfo {
       return 0;
     }
     final train = leftHeadingTrains.first;
-    if (train.currentLocation == stationName ||
-        (train.remainingSeconds ?? 0) < 160) {
+    if (train.currentLocation == stationName || (train.remainingSeconds ?? 0) < 160) {
       return 1;
     } else if (train.currentLocation == rightStationName) {
       return 0.07;
     }
     return -0.5;
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      name,
+      stationId,
+      stationName,
+      leftStationName,
+      rightStationName,
+      color,
+      trains,
+    ];
   }
 }

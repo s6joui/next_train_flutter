@@ -3,28 +3,33 @@ import 'package:next_train_flutter/features/home/data/sation_info_repository.dar
 import 'package:next_train_flutter/features/home/models/line_info.dart';
 
 class MockStationInfoRepository extends StationInfoRepository {
-  static const Map<String, List<LineInfo>> mockStationInfo = {'홍대입구': []};
+  bool shouldError = false;
 
   @override
   Future<List<LineInfo>> fetchLatestInfo(String stationName) async {
-    return Future.delayed(
-        const Duration(seconds: 0), () => mockStationInfo[stationName]!);
+    if (shouldError) {
+      return Future.error('error');
+    }
+    return Future.value([]);
+  }
+
+  @override
+  Set<String> getStationNames() {
+    return {};
   }
 }
 
 class MockLocalRepository extends LocalRepository {
+  String? stationName = '';
 
   @override
-  String? getStationName() {
-    throw UnimplementedError();
+  void setStationName(String stationName) {}
+
+  @override
+  Future<String?> getStationName() {
+    return Future.value(stationName);
   }
 
   @override
-  void setStationName(String stationName) {
-  }
-  
-  @override
-  void clear() {
-  }
-
+  void clear() {}
 }

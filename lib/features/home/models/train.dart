@@ -1,12 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
+
 import 'package:next_train_flutter/features/home/data/arrival_info.dart';
 
-class Train {
-  String? id;
-  int? direction;
-  int? remainingSeconds;
-  String? message;
-  String? currentLocation;
+class Train extends Equatable {
+  final String? id;
+  final int? direction;
+  final int? remainingSeconds;
+  final String? message;
+  final String? currentLocation;
 
   int? get remainingMinutes {
     if (remainingSeconds == null || remainingSeconds == 0) {
@@ -40,17 +43,31 @@ class Train {
     return DateFormat('HH:mm').format(now);
   }
 
-  Train(
+  const Train(
       {required this.id,
       required this.direction,
       required this.remainingSeconds,
+      required this.message,
       required this.currentLocation});
 
-  Train.fromArrivalInfo(ArrivalInfo info) {
-    id = info.btrainNo;
-    direction = info.statnTid;
-    remainingSeconds = int.parse(info.barvlDt ?? '0');
-    message = info.arvlMsg2;
-    currentLocation = info.arvlMsg3;
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      direction,
+      remainingSeconds,
+      message,
+      currentLocation,
+    ];
+  }
+
+  factory Train.fromArrivalInfo(ArrivalInfo info) {
+    return Train(
+      id: info.btrainNo,
+      direction: info.statnTid,
+      remainingSeconds: int.parse(info.barvlDt ?? '0'),
+      message: info.arvlMsg2,
+      currentLocation: info.arvlMsg3,
+    );
   }
 }

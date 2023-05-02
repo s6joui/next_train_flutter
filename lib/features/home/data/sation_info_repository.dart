@@ -30,8 +30,8 @@ class SubwayStationInfoResposiory extends StationInfoRepository {
 
   @override
   Future<List<LineInfo>> fetchLatestInfo(String stationName) async {
-    await Future.delayed(const Duration(
-        seconds: 2)); // Short delay to avoid calling the API too frequently
+    await Future.delayed(
+        const Duration(seconds: 2)); // Short delay to avoid calling the API too frequently
     final ArrivalsRequest request = ArrivalsRequest(stationName: stationName);
     try {
       final json = await networkClient.send(request);
